@@ -1,0 +1,317 @@
+---
+layout: post
+date: 2020-01-13
+tags: [git,command,software]
+categories:
+    - software
+---
+
+# git 常用命令
+
+## 1.git log控制输出宽度
+
+%<(N, trunc) 下一个单元的输出宽度限制为N列, 左对齐
+
+%<|(N, trunc) 下一个单元输出至全局第N列, 左对齐
+
+%>, %>|, %>>, %>< 类似, 分别为 右对齐, 右对齐, 右对齐(如果左边有多余空格则复用), 居中对齐
+
+<!-- more -->
+
+示例
+
+```shell
+git log --pretty=format:'%Cblue%h%Creset %<(40,trunc)%s [%C(green)%<(21,trunc)%ai%x08%x08%Creset %Cred%an%Creset%C(yellow)%d%Creset]'
+```
+
+>  其中 %0x08即\b, 为了把截断产生的"."删除
+
+| 选项  | 说明                                        | 选项  | 说明                               |
+| ----- | ------------------------------------------- | ----- | ---------------------------------- |
+| `%H`  | 提交对象（commit）的完整哈希字串            | `%ar` | 作者修订日期，按多久以前的方式显示 |
+| `%h`  | 提交对象的简短哈希字串                      | `%cn` | 提交者(committer)的名字            |
+| `%T`  | 树对象（tree）的完整哈希字串                | `%ce` | 提交者的电子邮件地址               |
+| `%t`  | 树对象的简短哈希字串                        | `%cd` | 提交日期                           |
+| `%P`  | 父对象（parent）的完整哈希字串              | `%cr` | 提交日期，按多久以前的方式显示     |
+| `%p`  | 父对象的简短哈希字串                        | `%s`  | 提交说明                           |
+| `%an` | 作者（author）的名字                        | `%ai` | 日期, ISO 8601 格式                |
+| `%ae` | 作者的电子邮件地址                          | `%d`  | ref名称                            |
+| `%ad` | 作者修订日期（可以用 --date= 选项定制格式） | `%e`  | encoding                           |
+
+
+
+## 2.Git清除不被任何分支所有的commit
+
+在一个分支上开发，有一些commit没有merge进master，后来放弃这个分支，不想继续开发了，那么这些没merge的commit就丢失了，称为dangling。
+
+想要清除这些commit，运行：
+
+```shell
+git reflog expire --expire-unreachable=now --all
+git gc --prune=now
+```
+
+
+
+
+
+## 3.得到两个tag之间的信息
+
+```
+git log tagA...tagB --oneline
+```
+
+
+
+
+
+## 4.Git 统计历史提交的Commit个数
+
+命令如下
+
+```
+git rev-list --all --count
+```
+
+
+
+## 5.Git 内部原理
+
+https://git-scm.com/book/zh/v2/Git-%E5%86%85%E9%83%A8%E5%8E%9F%E7%90%86-%E7%BB%B4%E6%8A%A4%E4%B8%8E%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D
+
+
+
+
+
+## 6.Git patch、apply、diff命令解析
+
+https://zhuanlan.zhihu.com/p/58431323
+
+
+
+
+
+## 6.1 找到一个empty tree 对应的sha值
+
+```
+git hash-object -t tree /dev/null
+4b825dc642cb6eb9a060e54bf8d69288fbee4904
+
+#the SHA-256 empty tree hash ID is:
+6ef19b41225c5369f1c104d45d8d85efa9b057b53b14b4b9b939dd74decc5321
+```
+
+[https://stackoverflow.com/questions/9765453/is-gits-semi-secret-empty-tree-object-reliable-and-why-is-there-not-a-symbolic](https://stackoverflow.com/questions/9765453/is-gits-semi-secret-empty-tree-object-reliable-and-why-is-there-not-a-symbolic)
+
+## 7. git --work-tree
+
+
+
+## 8.Git Diff 统计文件变更状态和变化行数
+
+以项目(ceph/ceph 为例)
+
+获取文件变化行数(增加行，删除行)
+
+```
+git diff 946d60369589d6a269938edd65c0a6a7b1c3ef5c 3b990136bfab74249f166dd742fd8e61637e63d9 --numstat 
+```
+
+获取文件变更状态
+
+```
+git diff 946d60369589d6a269938edd65c0a6a7b1c3ef5c 3b990136bfab74249f166dd742fd8e61637e63d9 --name-status
+```
+
+
+
+## 9.git 的几种文件状态
+
+
+
+> --diff-filter=[(A|C|D|M|R|T|U|X|B)…[*]]
+>
+> Select only files that are Added (`A`), Copied (`C`), Deleted (`D`), Modified (`M`), Renamed (`R`), have their type (i.e. regular file, symlink, submodule, …) changed (`T`), are Unmerged (`U`), are Unknown (`X`), or have had their pairing Broken (`B`). Any combination of the filter characters (including none) can be used. When `*` (All-or-none) is added to the combination, all paths are selected if there is any file that matches other criteria in the comparison; if there is no file that matches other criteria, nothing is selected.
+
+
+
+## 10.Git Diff 时获取完整的file_sha
+
+```
+git diff 946d60369589d6a269938edd65c0a6a7b1c3ef5c 3b990136bfab74249f166dd742fd8e61637e63d9 --full-index
+```
+
+
+
+
+
+## 11.Git log 输出指定的日期格式
+
+```
+ git log --format=%f:%ad --date=format:'%Y-%m-%d %H:%M:%S %a'
+```
+
+其中%ad显示日期 --date 设置对应的日期格式(%a 显示星期简写，完整写法使用%A)
+
+
+## 12.删除第一次提交的commit
+```
+可以通过如下命令撤销创建仓库后第一次提交的 commit
+
+git update-ref -d HEAD
+```
+
+
+
+##  13.[Pushing a (New) Empty Branch](https://www.edwardthomson.com/blog/pushing_an_empty_branch.html)
+
+> May 12, 2020
+>
+> Yesterday, I invoked this fun little command to create a new, empty `dist` branch in a GitHub repository:
+>
+> ```
+> commit_id=$(git commit-tree -m 'Distribution branch' 4b825dc642cb6eb9a060e54bf8d69288fbee4904)
+> git push origin ${commit_id}:refs/heads/dist
+> ```
+>
+> But I didn't explain it. So today I wanted to unpack exactly what's going on here.
+>
+> First, we're going to run a git command called `git commit-tree`, which will create a *commit* from a given *tree* object. The `-m 'Distribution branch'` will set the message on the commit. And the `4b825dc642cb6eb9a060e54bf8d69288fbee4904` is a special tree, the empty tree. It has no files in it; it's completely empty, and it's hardcoded into Git clients so it will just always be magically available to you. Since we didn't specify any parents, the new commit will not have any (it will be a new branch, completely unrelated to any existing branches). The new commit ID will be output on standard out.
+>
+> Then, we're using the bash/zsh syntax `$( ... )`. This indicates that we want to run that `git` command that's enclosed inside of them and capture it's standard out…
+>
+> Next, the `commit_id=...` will take that output and set it as the value of a variable. So we'll end up with the new git commit ID of the empty commit that we just created
+>
+> Finally, you can push up a single git commit to a remote server, creating a new branch when you do. You can use the `:` syntax for this, but pushing a new branch from a commit requires you to specify the *complete* reference name, in other words `refs/heads/dist` instead of just the branch name `dist`.
+>
+> So, voila! Now you can push an empty commit to a new branch on GitHub without having to switch branches, worry about what you have committed, or otherwise change anything in your local repository.
+
+```
+
+4b825dc642cb6eb9a060e54bf8d69288fbee4904 is a special hash value in git which denotes an empty tree. And it does not change from repo to repo.
+```
+
+
+
+## 14.查找某个文件被添加进repo 时的commit
+
+```shell
+# 示例仓库(github.com/git/git)
+git log --no-merges --diff-filter=A builtin-*.c 
+```
+
+参考 http://schacon.github.io/git/user-manual.html#birdview-on-the-source-code
+
+
+
+## 14.2 git 查找某个文件在哪个commit 上被删除
+
+```
+ git log --oneline --full-history -- prospector
+```
+
+## 14.3 git 查找commit 在哪个分支上
+
+```
+git branch -r --contains commitid
+```
+
+
+
+## 15.使用git grep命令搜索
+
+```
+git grep 
+```
+
+## 16.使用libgit2 如何实现git ls-file 效果
+
+参考 https://libgit2.org/libgit2/ex/HEAD/ls-files.html
+
+## 17.git maillist
+
+```
+https://marc.info/?l=git
+```
+
+
+
+## 18.用 `ls-remote` 查看 Git Wire Protocol 细节。
+
+```shell
+GIT_TRACE=1 GIT_TRACE_PACKET=1 git -c protocol.version=2 ls-remote
+```
+
+
+
+
+
+## 19. `git stash` 命令保存单个文件
+
+```
+git stash push file/path 
+```
+
+
+
+>**push [-p|--patch] [-k|--[no-]keep-index] [-u|--include-untracked] [-a|--all] [-q|--quiet] [-m|--message <message>] [--pathspec-from-file=<file> [--pathspec-file-nul]] [--] [<pathspec>…]**
+>
+>​	Save your local modifications to a new *stash entry* and roll them back to HEAD (in the working tree and in the index). The <message> part is optional and gives the description along with the stashed state.
+>
+>​	For quickly making a snapshot, you can omit "push". In this mode, non-option arguments are not allowed to prevent a misspelled subcommand from making an unwanted stash entry. The two exceptions to this are `stash -p` which acts as alias for `stash push -p` and pathspec elements, which are allowed after a double hyphen `--` for disambiguation.
+>
+>**save [-p|--patch] [-k|--[no-]keep-index] [-u|--include-untracked] [-a|--all] [-q|--quiet] [<message>]**
+>
+>​	This option is deprecated in favour of *git stash push*. It differs from "stash push" in that it cannot take pathspec. Instead, all non-option arguments are concatenated to form the stash message.
+
+
+
+
+
+## 20. 查看git unpacked object 和磁盘占用空间
+
+```shell
+git count-obbject -v —H
+```
+
+具体执行结果如下
+
+```
+host@localhost git % git count-objects
+0 objects, 0 kilobytes
+houjie@yuuri git % git count-objects -v
+count: 0
+size: 0
+in-pack: 306790
+packs: 2
+size-pack: 171416
+prune-packable: 0
+garbage: 0
+size-garbage: 0
+host@localhost git % git count-objects -v -H
+count: 0
+size: 0 bytes
+in-pack: 306790
+packs: 2
+size-pack: 167.40 MiB
+prune-packable: 0
+garbage: 0
+size-garbage: 0 bytes
+```
+
+count: the number of loose objects
+
+size: disk space consumed by loose objects, in KiB (unless -H is specified)
+
+in-pack: the number of in-pack objects
+
+size-pack: disk space consumed by the packs, in KiB (unless -H is specified)
+
+prune-packable: the number of loose objects that are also present in the packs. These objects could be pruned using `git prune-packed`.
+
+garbage: the number of files in object database that are neither valid loose objects nor valid packs
+
+size-garbage: disk space consumed by garbage files, in KiB (unless -H is specified)
+
+alternate: absolute path of alternate object databases; may appear multiple times, one line per path. Note that if the path contains non-printable characters, it may be surrounded by double-quotes and contain C-style backslashed escape sequences.
+

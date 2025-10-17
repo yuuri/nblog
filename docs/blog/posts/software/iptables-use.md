@@ -1,0 +1,24 @@
+---
+layout: post
+date: 2021-06-13
+tags: [iptables,linux,shell,software]
+categories:
+    - software
+---
+
+# iptables 使用
+
+## 1.开启端口映射
+
+添加filter 表的forward链
+
+```shell
+iptables -I FORWARD -m state -d 192.168.122.0/24 --state NEW,RELATED,ESTABLISHED -j ACCEPT
+```
+
+添加nat 表的prerouting链
+
+```shell
+iptables -t nat -I PREROUTING -p tcp --dport 1433 -j DNAT --to-destination 192.168.122.100:9200
+```
+

@@ -1,0 +1,74 @@
+---
+layout: post
+date: 2020-03-21
+tags: [postgresql,database,linux,software]
+categories:
+    - software
+---
+
+
+# Postgresql 学习笔记
+
+---
+
+
+
+
+
+## 1.添加腾讯postgresql 镜像源
+
+在 `/etc/apt/source.list.d/`下创建`pgdg.list`并添加如下内容:
+
+```
+deb https://mirrors.cloud.tencent.com/postgresql/repos/apt/ bionic-pgdg main
+#deb https://mirrors.tencentyun.com/postgresql/repos/apt/ bionic-pgdg main
+#deb-src http://apt.postgresql.org/pub/repos/apt/ bionic-pgdg main
+```
+
+执行更新apt 源
+
+```
+sudo apt upgrade
+```
+
+## 2.执行安装命令
+
+```
+sudo apt install postgresql-12
+```
+
+## 3.启动pg
+
+```
+pg_ctlcluster 12 main start
+等效于如下命令:
+/usr/lib/postgresql/12/bin/postgres "-D" "/var/lib/postgresql/12/main" "-c" "config_file=/etc/postgresql/12/main/postgresql.conf"
+
+```
+
+或者使用systemd 启动postgresql 12
+
+postgresql 12 在ubuntu的服务名为`postgresql@12.service`
+
+```
+systemctl start postgresql@12-main.service
+这里的main指的是数据集簇名
+```
+
+`pg_ctl`路径位于`/usr/lib/postgresql/12/bin/pg_ctl`
+
+
+
+参考资料：
+
+[1].https://github.com/digoal/blog/blob/master/201901/20190105_01.md (PostgreSQL 培训视频(含PG知识图谱、Oracle迁移到PG知识点))
+
+[2].https://github.com/digoal/blog/blob/master/201812/20181203_01.md (PostgreSQL 11 参数模板 - 珍藏级)
+
+[3].https://github.com/digoal/blog/blob/master/202001/20200118_02.md (PostgreSQL+MySQL 联合解决方案课程 - 汇总视频、课件)
+
+[4].https://github.com/digoal/blog/blob/master/201805/20180524_02.md (PostgreSQL 多应用场景实践 - 沙箱实验)
+
+
+
+[5].https://github.com/digoal/blog (完整资料)

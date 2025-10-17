@@ -1,0 +1,119 @@
+---
+layout: post
+date: 2020-11-04
+tags: [mysql,database,sql,software]
+categories:
+    - software
+
+---
+# MySQL一张表中一条数据拆分为多条数据
+
+## 1.创建表
+
+```sql
+create table test_table
+(
+   id int auto_increment
+      primary key,
+   project_id int null,
+   branch_name varchar(512) null
+);
+```
+<!-- more -->
+
+## 2.插入数据
+
+```sql
+
+# 插入数据
+insert into test_table (id, project_id, branch_name) values (1, 1, 'branch1,branch2,branch3');
+insert into test_table (id, project_id, branch_name) values (2, 2, 'branch3,branch4,branch5');
+insert into test_table (id, project_id, branch_name) values (3, 3, 'branch1,branch2,branch3');
+insert into test_table (id, project_id, branch_name) values (4, 4, 'branch3,branch1');
+insert into test_table (id, project_id, branch_name) values (5, 5, 'branch1');
+```
+
+查看插入是否成功
+
+```sql
+mysql> select * from test_table;
++----+------------+-------------------------+
+| id | project_id | branch_name             |
++----+------------+-------------------------+
+|  1 |          1 | branch1,branch2,branch3 |
+|  2 |          2 | branch3,branch4,branch5 |
+|  3 |          3 | branch1,branch2,branch3 |
+|  4 |          4 | branch3,branch1         |
+|  5 |          5 | branch1                 |
++----+------------+-------------------------+
+5 rows in set (0.00 sec)
+
+```
+
+
+
+## 3.查询数据
+
+```sql
+# 查询数据
+SELECT a.project_id,
+       substring_index(substring_index(a.branch_name,',',b.help_topic_id + 1),',', -1)
+           AS branch_name
+FROM test_table a
+    JOIN mysql.help_topic b ON b.help_topic_id < (
+        length(a.branch_name) - length(REPLACE(a.branch_name, ',', '')) + 1);
+```
+
+查询结果如下
+
+```sql
+mysql> SELECT a.project_id,
+    ->        substring_index(substring_index(a.branch_name,',',b.help_topic_id + 1),',', -1)
+    ->            AS branch_name
+    -> FROM test_table a
+    ->     JOIN mysql.help_topic b ON b.help_topic_id < (
+    ->         length(a.branch_name) - length(REPLACE(a.branch_name, ',', '')) + 1);
+    
++------------+-------------+
+| project_id | branch_name |
++------------+-------------+
+|          1 | branch1     |
+|          1 | branch2     |
+|          1 | branch3     |
+|          2 | branch3     |
+|          2 | branch4     |
+|          2 | branch5     |
+|          3 | branch1     |
+|          3 | branch2     |
+|          3 | branch3     |
+|          4 | branch3     |
+|          4 | branch1     |
+|          5 | branch1     |
++------------+-------------+
+12 rows in set (0.00 sec)
+```
+
+## 4.将数据插入到另外一张表
+
+```sql
+# 将数据插入到另外一张表
+# 1 创建表2
+create table test_table2
+(
+   id int auto_increment
+      primary key,
+   project_id int null,
+   branch_name varchar(512) null
+);
+# 2.插入数据
+insert into test_table2(project_id, branch_name)
+(
+    SELECT a.project_id,
+           substring_index(substring_index(a.branch_name, ',', b.help_topic_id + 1), ',', -1)
+               AS branch_name
+    FROM test_table a
+             JOIN mysql.help_topic b ON b.help_topic_id < (
+            length(a.branch_name) - length(REPLACE(a.branch_name, ',', '')) + 1)
+);
+```
+

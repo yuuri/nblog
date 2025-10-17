@@ -1,0 +1,67 @@
+---
+layout: post
+date: 2024-10-20
+tags: [postgresql,database,sql,shell,command,software]
+categories:
+    - software
+---
+# PostgreSQL常用命令
+
+## 1. 查看数据库当前用户以及连接
+
+```
+select * from pg_stat_activity;
+```
+
+结果集会显示出当前连接的数据库名，用户，IP地址，连接开始时间，查询的语句等。
+<!-- more -->
+
+这里的pg_stat_activity其实是一个视图，它的定义可以在postgres这个数据库里面的视图部分找到，以下是它的定义：
+
+> CREATE OR REPLACE VIEW pg_stat_activity AS SELECT s.datid, d.datname, s.procpid, s.usesysid, u.rolname AS usename, s.application_name, s.client_addr, s.client_hostname, s.client_port, s.backend_start, s.xact_start, s.query_start, s.waiting, s.current_query FROM pg_database d, pg_stat_get_activity(NULL::integer) s(datid, procpid, usesysid, application_name, current_query, waiting, xact_start, query_start, backend_start, client_addr, client_hostname, client_port), pg_authid u WHERE s.datid = d.oid AND s.usesysid = u.oid;
+
+可以看到，pg_stat_activity这个视图是由 pg_database，pg_authid，以及两个方法的结果来组合成的。
+
+pg_database ，顾名思义就是储存了在pg里面的所有的数据库名称。
+
+pg_authid，是用来储存pg的登录账号。
+
+pg_stat_get_backend_activity在Postgresql里面的定义如下：
+
+> CREATE OR REPLACE FUNCTION pg_stat_get_backend_activity(integer) RETURNS text AS 'pg_stat_get_backend_activity' LANGUAGE internal STABLE STRICT COST 1; 
+> ALTER FUNCTION pg_stat_get_backend_activity(integer) OWNER TO postgres; COMMENT ON FUNCTION pg_stat_get_backend_activity(integer) IS 'statistics: current query of backend';
+
+可见它是一个pg的内部方法，用来统计当前query的数目。
+
+
+
+
+
+## 2.查看pg 的相关配置信息和状态
+
+```
+可以使用以下查询来查看 PostgreSQL 的系统配置参数：
+SHOW ALL;
+-- 该命令会列出当前会话的所有配置参数及其值。如果需要查找特定参数，也可以用 SHOW 命令指定参数名称，例如：
+SHOW max_connections;
+-- 或者使用 pg_settings 系统视图查询参数：
+SELECT name, setting, unit, category, short_desc
+FROM pg_settings;
+-- 这样可以查看到所有参数的详细信息。
+
+
+
+-- PostgreSQL 没有直接的全局状态信息命令，但可以通过 pg_stat_activity 和其他统计视图来查看数据库的运行情况。例如：
+--  •  查看活动会话：查看当前正在运行的 SQL 语句、连接信息等
+SELECT * FROM pg_stat_activity;
+
+--  •  查看数据库统计信息：通过 pg_stat_database 可以查看各数据库的统计信息（例如连接数、事务数等）
+SELECT * FROM pg_stat_database;
+--  •  查看锁定情况：查看当前数据库中的锁状态
+SELECT * FROM pg_locks;
+-- PostgreSQL 的统计信息视图大致包括以下几类：
+--  •  pg_stat_activity：当前活动会话
+--  •  pg_stat_database：数据库级统计信息
+--  •  pg_stat_user_tables：用户表级统计信息
+--  •  pg_stat_user_indexes：用户索引级统计信息
+```

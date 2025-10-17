@@ -1,0 +1,371 @@
+---
+layout: post
+date: 2024-10-22
+tags: [mysql,database,sql,shell,command,software]
+categories:
+    - software
+---
+
+# MySQL 监控指标
+
+## 1.opened_table_definitions
+
+### 1.查询
+
+```sql
+MySQL admin@192.168.31.180:(none)> SHOW GLOBAL STATUS LIKE '%Table_definition%';
++--------------------------+-------+
+| Variable_name            | Value |
++--------------------------+-------+
+| Open_table_definitions   | 226   |
+| Opened_table_definitions | 299   |
++--------------------------+-------+
+
+2 rows in set
+Time: 0.179s
+```
+
+
+
+<!-- more -->
+
+
+## 2. table_cache_hit
+
+
+
+### 1.查询 
+
+```
+MySQL admin@192.168.31.180:(none)> SHOW GLOBAL STATUS LIKE 'table_open_cache_hits';
++-----------------------+---------+
+| Variable_name         | Value   |
++-----------------------+---------+
+| Table_open_cache_hits | 1685937 |
++-----------------------+---------+
+
+1 row in set
+Time: 0.031s
+MySQL admin@192.168.31.180:(none)> SHOW GLOBAL STATUS LIKE 'table_open_cache_misses';
++-------------------------+-------+
+| Variable_name           | Value |
++-------------------------+-------+
+| Table_open_cache_misses | 2967  |
++-------------------------+-------+
+
+1 row in set
+Time: 0.073s
+```
+
+
+
+### 2.计算
+
+```shell
+Table_open_cache_hits / (Table_open_cache_hits + Table_open_cache_misses)
+```
+
+
+
+
+
+## 3. semaphores
+
+
+
+### 1.查询
+
+```sql
+MySQL admin@192.168.31.180:(none)> show engine innodb status\G;
+***************************[ 1. row ]***************************
+Type   | InnoDB
+Name   |
+Status |
+=====================================
+2024-10-22 16:15:12 139759782516288 INNODB MONITOR OUTPUT
+=====================================
+Per second averages calculated from the last 5 seconds
+-----------------
+BACKGROUND THREAD
+-----------------
+srv_master_thread loops: 1832 srv_active, 0 srv_shutdown, 3649531 srv_idle
+srv_master_thread log flush and writes: 0
+----------
+SEMAPHORES
+----------
+OS WAIT ARRAY INFO: reservation count 2758
+OS WAIT ARRAY INFO: signal count 2747
+RW-shared spins 0, rounds 0, OS waits 0
+RW-excl spins 0, rounds 0, OS waits 0
+RW-sx spins 0, rounds 0, OS waits 0
+Spin rounds per wait: 0.00 RW-shared, 0.00 RW-excl, 0.00 RW-sx
+------------
+TRANSACTIONS
+------------
+Trx id counter 536467
+Purge done for trx's n:o < 536467 undo n:o < 0 state: running but idle
+History list length 0
+LIST OF TRANSACTIONS FOR EACH SESSION:
+---TRANSACTION 421235244174552, not started
+0 lock struct(s), heap size 1128, 0 row lock(s)
+---TRANSACTION 421235244173744, not started
+0 lock struct(s), heap size 1128, 0 row lock(s)
+---TRANSACTION 421235244172936, not started
+0 lock struct(s), heap size 1128, 0 row lock(s)
+--------
+FILE I/O
+--------
+I/O thread 0 state: waiting for completed aio requests (insert buffer thread)
+I/O thread 1 state: waiting for completed aio requests (read thread)
+I/O thread 2 state: waiting for completed aio requests (read thread)
+I/O thread 3 state: waiting for completed aio requests (read thread)
+I/O thread 4 state: waiting for completed aio requests (read thread)
+I/O thread 5 state: waiting for completed aio requests (write thread)
+I/O thread 6 state: waiting for completed aio requests (write thread)
+I/O thread 7 state: waiting for completed aio requests (write thread)
+I/O thread 8 state: waiting for completed aio requests (write thread)
+Pending normal aio reads: [0, 0, 0, 0] , aio writes: [0, 0, 0, 0] ,
+ ibuf aio reads:
+Pending flushes (fsync) log: 0; buffer pool: 0
+1205 OS file reads, 87509 OS file writes, 60631 OS fsyncs
+0.00 reads/s, 0 avg bytes/read, 0.00 writes/s, 0.00 fsyncs/s
+-------------------------------------
+INSERT BUFFER AND ADAPTIVE HASH INDEX
+-------------------------------------
+Ibuf: size 1, free list len 0, seg size 2, 0 merges
+merged operations:
+ insert 0, delete mark 0, delete 0
+discarded operations:
+ insert 0, delete mark 0, delete 0
+Hash table size 34679, node heap has 3 buffer(s)
+Hash table size 34679, node heap has 0 buffer(s)
+Hash table size 34679, node heap has 2 buffer(s)
+Hash table size 34679, node heap has 1 buffer(s)
+Hash table size 34679, node heap has 1 buffer(s)
+Hash table size 34679, node heap has 1 buffer(s)
+Hash table size 34679, node heap has 1 buffer(s)
+Hash table size 34679, node heap has 1 buffer(s)
+0.00 hash searches/s, 0.00 non-hash searches/s
+---
+LOG
+---
+Log sequence number          599778737
+Log buffer assigned up to    599778737
+Log buffer completed up to   599778737
+Log written up to            599778737
+Log flushed up to            599778737
+Added dirty pages up to      599778737
+Pages flushed up to          599778737
+Last checkpoint at           599778737
+Log minimum file id is       172
+Log maximum file id is       183
+30242 log i/o's done, 0.00 log i/o's/second
+----------------------
+BUFFER POOL AND MEMORY
+----------------------
+Total large memory allocated 0
+Dictionary memory allocated 659116
+Buffer pool size   8192
+Free buffers       6593
+Database pages     1589
+Old database pages 583
+Modified db pages  0
+Pending reads      0
+Pending writes: LRU 0, flush list 0, single page 0
+Pages made young 0, not young 0
+0.00 youngs/s, 0.00 non-youngs/s
+Pages read 1164, created 425, written 41629
+0.00 reads/s, 0.00 creates/s, 0.00 writes/s
+No buffer pool page gets since the last printout
+Pages read ahead 0.00/s, evicted without access 0.00/s, Random read ahead 0.00/s
+LRU len: 1589, unzip_LRU len: 0
+I/O sum[0]:cur[0], unzip sum[0]:cur[0]
+--------------
+ROW OPERATIONS
+--------------
+0 queries inside InnoDB, 0 queries in queue
+0 read views open inside InnoDB
+Process ID=1430068, Main thread ID=139759569593920 , state=sleeping
+Number of rows inserted 1932, updated 3761, deleted 1924, read 19375122
+0.00 inserts/s, 0.00 updates/s, 0.00 deletes/s, 0.00 reads/s
+Number of system rows inserted 8, updated 361, deleted 8, read 20001
+0.00 inserts/s, 0.00 updates/s, 0.00 deletes/s, 0.00 reads/s
+----------------------------
+END OF INNODB MONITOR OUTPUT
+============================
+
+
+1 row in set
+Time: 0.011s
+MySQL admin@192.168.31.180:(none)>
+
+```
+
+
+
+
+
+```sql
+MySQL admin@192.168.31.180:(none)> SHOW ENGINE INNODB MUTEX ;
++--------+----------------------------+-----------+
+| Type   | Name                       | Status    |
++--------+----------------------------+-----------+
+| InnoDB | rwlock: dict0dict.cc:2561  | waits=1   |
+| InnoDB | rwlock: dict0dict.cc:1027  | waits=3   |
+| InnoDB | sum rwlock: buf0buf.cc:795 | waits=105 |
++--------+----------------------------+-----------+
+```
+
+
+
+### 2.doc description
+
+> - SEMAPHORES
+>
+>   This section reports threads waiting for a semaphore and statistics on how many times threads have needed a spin or a wait on a mutex or a rw-lock semaphore. A large number of threads waiting for semaphores may be a result of disk I/O, or contention problems inside `InnoDB`. Contention can be due to heavy parallelism of queries or problems in operating system thread scheduling. Setting the [`innodb_thread_concurrency`](https://dev.mysql.com/doc/refman/8.0/en/innodb-parameters.html#sysvar_innodb_thread_concurrency) system variable smaller than the default value might help in such situations. The `Spin rounds per wait` line shows the number of spinlock rounds per OS wait for a mutex.
+
+reference:
+
+[1].[https://dev.mysql.com/doc/refman/8.0/en/innodb-standard-monitor.html](https://dev.mysql.com/doc/refman/8.0/en/innodb-standard-monitor.html)
+
+
+
+
+
+### 3.Activity Metrics
+
+**Table 6.16 InnoDB Semaphore Activity Metrics**
+
+
+
+OS WAIT ARRAY INFO: reservation count 2758
+OS WAIT ARRAY INFO: signal count 2747
+RW-shared spins 0, rounds 0, OS waits 0
+RW-excl spins 0, rounds 0, OS waits 0
+RW-sx spins 0, rounds 0, OS waits 0
+Spin rounds per wait: 0.00 RW-shared, 0.00 RW-excl, 0.00 RW-sx
+
+
+
+| Name                             | Description                                                  |
+| :------------------------------- | :----------------------------------------------------------- |
+| Mutex Os Waits (Delta)           | The number of InnoDB semaphore/mutex waits yielded to the OS. |
+| Mutex Rounds (Delta)             | The number of InnoDB semaphore/mutex spin rounds for the internal sync array. |
+| Mutex Spin Waits (Delta)         | The number of InnoDB semaphore/mutex spin waits for the internal sync array. |
+| Os Reservation Count (Delta)     | The number of times an InnoDB semaphore/mutex wait was added to the internal sync array. |
+| Os Signal Count (Delta)          | The number of times an InnoDB thread was signaled using the internal sync array. |
+| Rw Excl Os Waits (Delta)         | The number of exclusive (write) semaphore waits yielded to the OS by InnoDB. |
+| Rw Excl Rounds (Delta)           | The number of exclusive (write) semaphore spin rounds within the InnoDB sync array. |
+| Rw Excl Spins (Delta)            | The number of exclusive (write) semaphore spin waits within the InnoDB sync array. |
+| Rw Shared Os Waits (Delta)       | The number of shared (read) semaphore waits yielded to the OS by InnoDB. |
+| Rw Shared Rounds (Delta)         | The number of shared (read) semaphore spin rounds within the InnoDB sync array. |
+| Rw Shared Spins (Delta)          | The number of shared (read) semaphore spin waits within the InnoDB sync array. |
+| Spins Per Wait Mutex (Delta)     | The ratio of InnoDB semaphore/mutex spin rounds to mutex spin waits for the internal sync array. |
+| Spins Per Wait Rw Excl (Delta)   | The ratio of InnoDB exclusive (write) semaphore/mutex spin rounds to spin waits within the internal sync array. |
+| Spins Per Wait Rw Shared (Delta) | The ratio of InnoDB shared (read) semaphore/mutex spin rounds to spin waits within the internal sync array. |
+
+
+
+
+
+reference: 
+
+[1].https://dev.mysql.com/doc/mysql-em-plugin/en/myoem-metric-innodb-semaphoreactivity-category.html
+
+
+
+## 4.Modified db pages.
+
+
+
+Modified db pages 是 buffer pool 中的其中一项指标
+
+`InnoDB` Standard Monitor output, which can be accessed using [`SHOW ENGINE INNODB STATUS`](https://dev.mysql.com/doc/refman/8.0/en/innodb-standard-monitor.html), provides metrics regarding operation of the buffer pool. Buffer pool metrics are located in the `BUFFER POOL AND MEMORY` section of `InnoDB` Standard Monitor output:
+
+```sql
+----------------------
+BUFFER POOL AND MEMORY
+----------------------
+Total large memory allocated 2198863872
+Dictionary memory allocated 776332
+Buffer pool size   131072
+Free buffers       124908
+Database pages     5720
+Old database pages 2071
+Modified db pages  910
+Pending reads 0
+Pending writes: LRU 0, flush list 0, single page 0
+Pages made young 4, not young 0
+0.10 youngs/s, 0.00 non-youngs/s
+Pages read 197, created 5523, written 5060
+0.00 reads/s, 190.89 creates/s, 244.94 writes/s
+Buffer pool hit rate 1000 / 1000, young-making rate 0 / 1000 not
+0 / 1000
+Pages read ahead 0.00/s, evicted without access 0.00/s, Random read
+ahead 0.00/s
+LRU len: 5720, unzip_LRU len: 0
+I/O sum[0]:cur[0], unzip sum[0]:cur[0]
+```
+
+
+
+The following table describes buffer pool metrics reported by the `InnoDB` Standard Monitor.
+
+Per second averages provided in `InnoDB` Standard Monitor output are based on the elapsed time since `InnoDB` Standard Monitor output was last printed.
+
+
+
+**Table 17.2 InnoDB Buffer Pool Metrics**
+
+| Name                         | Description                                                  |
+| :--------------------------- | :----------------------------------------------------------- |
+| Total memory allocated       | The total memory allocated for the buffer pool in bytes.     |
+| Dictionary memory allocated  | The total memory allocated for the `InnoDB` data dictionary in bytes. |
+| Buffer pool size             | The total size in pages allocated to the buffer pool.        |
+| Free buffers                 | The total size in pages of the buffer pool free list.        |
+| Database pages               | The total size in pages of the buffer pool LRU list.         |
+| Old database pages           | The total size in pages of the buffer pool old LRU sublist.  |
+| Modified db pages            | The current number of pages modified in the buffer pool.     |
+| Pending reads                | The number of buffer pool pages waiting to be read into the buffer pool. |
+| Pending writes LRU           | The number of old dirty pages within the buffer pool to be written from the bottom of the LRU list. |
+| Pending writes flush list    | The number of buffer pool pages to be flushed during checkpointing. |
+| Pending writes single page   | The number of pending independent page writes within the buffer pool. |
+| Pages made young             | The total number of pages made young in the buffer pool LRU list (moved to the head of sublist of “new” pages). |
+| Pages made not young         | The total number of pages not made young in the buffer pool LRU list (pages that have remained in the “old” sublist without being made young). |
+| youngs/s                     | The per second average of accesses to old pages in the buffer pool LRU list that have resulted in making pages young. See the notes that follow this table for more information. |
+| non-youngs/s                 | The per second average of accesses to old pages in the buffer pool LRU list that have resulted in not making pages young. See the notes that follow this table for more information. |
+| Pages read                   | The total number of pages read from the buffer pool.         |
+| Pages created                | The total number of pages created within the buffer pool.    |
+| Pages written                | The total number of pages written from the buffer pool.      |
+| reads/s                      | The per second average number of buffer pool page reads per second. |
+| creates/s                    | The average number of buffer pool pages created per second.  |
+| writes/s                     | The average number of buffer pool page writes per second.    |
+| Buffer pool hit rate         | The buffer pool page hit rate for pages read from the buffer pool vs from disk storage. |
+| young-making rate            | The average hit rate at which page accesses have resulted in making pages young. See the notes that follow this table for more information. |
+| not (young-making rate)      | The average hit rate at which page accesses have not resulted in making pages young. See the notes that follow this table for more information. |
+| Pages read ahead             | The per second average of read ahead operations.             |
+| Pages evicted without access | The per second average of the pages evicted without being accessed from the buffer pool. |
+| Random read ahead            | The per second average of random read ahead operations.      |
+| LRU len                      | The total size in pages of the buffer pool LRU list.         |
+| unzip_LRU len                | The length (in pages) of the buffer pool unzip_LRU list.     |
+| I/O sum                      | The total number of buffer pool LRU list pages accessed.     |
+| I/O cur                      | The total number of buffer pool LRU list pages accessed in the current interval. |
+| I/O unzip sum                | The total number of buffer pool unzip_LRU list pages decompressed. |
+| I/O unzip cur                | The total number of buffer pool unzip_LRU list pages decompressed in the current interval. |
+
+***\*Notes\****:
+
+- The `youngs/s` metric is applicable only to old pages. It is based on the number of page accesses. There can be multiple accesses for a given page, all of which are counted. If you see very low `youngs/s` values when there are no large scans occurring, consider reducing the delay time or increasing the percentage of the buffer pool used for the old sublist. Increasing the percentage makes the old sublist larger so that it takes longer for pages in that sublist to move to the tail, which increases the likelihood that those pages are accessed again and made young. See [Section 17.8.3.3, “Making the Buffer Pool Scan Resistant”](https://dev.mysql.com/doc/refman/8.0/en/innodb-performance-midpoint_insertion.html).
+- The `non-youngs/s` metric is applicable only to old pages. It is based on the number of page accesses. There can be multiple accesses for a given page, all of which are counted. If you do not see a higher `non-youngs/s` value when performing large table scans (and a higher `youngs/s` value), increase the delay value. See [Section 17.8.3.3, “Making the Buffer Pool Scan Resistant”](https://dev.mysql.com/doc/refman/8.0/en/innodb-performance-midpoint_insertion.html).
+- The `young-making` rate accounts for all buffer pool page accesses, not just accesses for pages in the old sublist. The `young-making` rate and `not` rate do not normally add up to the overall buffer pool hit rate. Page hits in the old sublist cause pages to move to the new sublist, but page hits in the new sublist cause pages to move to the head of the list only if they are a certain distance from the head.
+- `not (young-making rate)` is the average hit rate at which page accesses have not resulted in making pages young due to the delay defined by [`innodb_old_blocks_time`](https://dev.mysql.com/doc/refman/8.0/en/innodb-parameters.html#sysvar_innodb_old_blocks_time) not being met, or due to page hits in the new sublist that did not result in pages being moved to the head. This rate accounts for all buffer pool page accesses, not just accesses for pages in the old sublist.
+
+Buffer pool [server status variables](https://dev.mysql.com/doc/refman/8.0/en/server-status-variables.html) and the [`INNODB_BUFFER_POOL_STATS`](https://dev.mysql.com/doc/refman/8.0/en/information-schema-innodb-buffer-pool-stats-table.html) table provide many of the same buffer pool metrics found in `InnoDB` Standard Monitor output. For more information, see [Example 17.10, “Querying the INNODB_BUFFER_POOL_STATS Table”](https://dev.mysql.com/doc/refman/8.0/en/innodb-information-schema-buffer-pool-tables.html#innodb-information-schema-buffer-pool-stats-example).
+
+
+
+
+
+reference: 
+
+[1].[https://dev.mysql.com/doc/refman/8.0/en/innodb-buffer-pool.html](https://dev.mysql.com/doc/refman/8.0/en/innodb-buffer-pool.html)

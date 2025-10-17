@@ -1,0 +1,2 @@
+# 修改cloudflare 默认构建命令
+将默认构建命令由 `mkdocs build` 修改为 `poetry run mkdocs build`

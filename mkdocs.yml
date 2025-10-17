@@ -1,0 +1,92 @@
+site_name: My New Docs
+
+theme:
+  name: material
+  icon:
+    repo: fontawesome/brands/github
+  language: zh
+  features:
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.footer
+    - content.code.copy
+    - toc.follow
+    - toc.integrate
+
+
+nav:
+  - 博客: index.md
+#  - 关于: about.md
+  - 标签: tags.md
+  - link: share-link.md
+
+
+
+plugins:
+  - tags
+  - blog:
+      post_url_format: "{categories}/{date}/{file}"
+      blog_dir: .
+      post_dir: blog/posts
+      archive_toc: true
+      categories_toc: true
+      blog_toc: true
+      pagination_per_page: 25
+  - rss:
+      enabled: !ENV [DEPLOY, false]
+      abstract_chars_count: -1
+      match_path: blog/posts/.*
+      date_from_meta:
+        as_creation: date
+        as_update: date
+      categories:
+        - categories
+        - tags
+  - search:
+  - git-revision-date-localized:
+      enabled: !ENV [DEPLOY, false]
+      enable_creation_date: true
+  - wavedrom:
+      embed_svg: true
+      pymdownx: true
+  - social:
+      enabled: !ENV [DEPLOY, false]
+      cards_layout_options:
+        font_family: Noto Sans SC
+
+markdown_extensions:
+  - toc:
+      permalink: true
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: wavedrom
+          class: wavedrom
+          format: !!python/name:markdownwavedrom.plugin.fence_wavedrom_format
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - admonition
+  - pymdownx.details
+  - pymdownx.tilde
+  - footnotes
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/yuuri
+

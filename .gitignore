@@ -1,0 +1,8 @@
+.idea
+
+##### Work env #####
+## below Global/macOS.gitignore
+# General
+*.DS_Store
+.AppleDouble
+.LSOverride

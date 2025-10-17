@@ -1,0 +1,55 @@
+---
+layout: post
+date: 2020-05-11
+tags: [linux,command,shell,software]
+categories:
+    - software
+
+---
+# linux 命令使用
+
+
+1.查看journal 日志所占用的空间
+
+```
+journalctl --disk-usage
+```
+
+2.清理不必要的journal 日志
+
+```
+journalctl --vacuum-size=10M
+```
+
+
+
+3.查看ubuntu 下载的软件包
+
+```
+du  –h  /var/cache/apt/archives
+```
+
+
+
+4.产看inodes消耗情况
+
+```
+df -i 
+```
+
+
+
+5.删除用户后遗留下的垃圾文件
+
+```
+find ./ -nouser  |xargs rm –rf
+```
+
+
+
+6.清除不必要的core文件(慎用)
+
+```
+find / -name core -print -exec rm -rf {} \;
+```
+
