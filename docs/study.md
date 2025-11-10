@@ -37,7 +37,10 @@
 ---
 
 1.[Go语言设计与实现](https://draven.co/golang/){:target="_blank"}  
-
+2.[Go-by-Example](https://gobyexample.com/){:target="_blank"}  
+3.[Go语言高级编程](https://chai2010.cn/advanced-go-programming-book/index.html){:target="_blank"}    
+4.[Go语言中文文档](https://www.topgoer.com/){:target="_blank"}  
+5.[Go语言高性能编程](https://geektutu.com/post/high-performance-go.html){:target="_blank"}  
 ---
 
 1.[Kubernetes实践指南](https://imroc.cc/kubernetes/index.html){:target="_blank"}  
