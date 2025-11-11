@@ -29,6 +29,7 @@
 3.[LLM-Inference-Handbook](https://bentoml.com/llm/){:target="_blank"}  
 4.[AI-Infra](https://infrasys-ai.github.io/aiinfra-docs/index.html){:target="_blank"}         
 5.[AI-System](https://infrasys-ai.github.io/aisystem-docs/){:target="_blank"}  
+6.[数据分布的深度表达学习](https://ma-lab-berkeley.github.io/deep-representation-learning-book/zh/index.html){:target="_blank"}  
 
 ---
 
