@@ -34,6 +34,8 @@
 ---
 
 1.[How to Read an RFC](https://www.mnot.net/blog/2018/07/31/read_rfc){:target="_blank"}   
+2.[SDN网络指南](https://feisky.gitbooks.io/sdn/content/){:target="_blank"}   
+3.[网络基本功系列](https://rack-leen.github.io/world/myworld/network-basic/index.html){:target="_blank"}   
 
 ---
 
