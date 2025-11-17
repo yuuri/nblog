@@ -50,5 +50,9 @@
 2.[Kubernetes-Documentation](https://kubernetes.io/docs/home/){:target="_blank"}  
 
 
+---
+1.[DDIA第一版逐章精度](https://ddia.qtmuniao.com/){:target="_blank"}  
+2.[DDIA-《Designing Data-Intensive Applications 2nd Edition》](https://ddia.vonng.com/){:target="_blank"}   
+
 
 
