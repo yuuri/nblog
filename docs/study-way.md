@@ -1,5 +1,8 @@
 # 学习方法
 
+[Thoughts Memo 翻译合集](https://l-m-sherlock.github.io/thoughts-memo-translation/){:target="_blank"}  
+
+
 1.知识的飞轮，简而言之，要让知识自己转起来。看得多所以学得快，学得快所以学的更多，学的多了就能触类旁通。  
 [https://zhuanlan.zhihu.com/p/55804099](https://zhuanlan.zhihu.com/p/55804099){:target="_blank"}   
 
