@@ -48,7 +48,7 @@
 
 1.[Kubernetes实践指南](https://imroc.cc/kubernetes/index.html){:target="_blank"}  
 2.[Kubernetes-Documentation](https://kubernetes.io/docs/home/){:target="_blank"}  
-
+3.[introduction-terraform](https://lonegunmanb.github.io/introduction-terraform/){:target="_blank"}
 
 ---
 1.[DDIA第一版逐章精度](https://ddia.qtmuniao.com/){:target="_blank"}  
