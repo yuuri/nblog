@@ -1303,7 +1303,7 @@ wavedrom = ">=2.0.3"
 
 [package.source]
 type = "git"
-url = "https://github.com/jiegec/mkdocs-wavedrom-plugin.git"
+url = "https://github.com/yuuri/mkdocs-wavedrom-plugin.git"
 reference = "HEAD"
 resolved_reference = "4a4916742559281538353fbe3de331418c8878c7"
 
@@ -2043,4 +2043,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "2f6d8cbfaea958d99fa2996be143190004132a45e16a5d53366ee10f1ea0b66e"
+content-hash = "7ad3c803c81ed1b7648333ff79e6f6790b5feb4e62f8d6c57f391ff04988b3d4"
