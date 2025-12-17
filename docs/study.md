@@ -4,6 +4,12 @@
 2.[Way to AGI-飞书文档](https://waytoagi.feishu.cn/wiki/QPe5w5g7UisbEkkow8XcDmOpn8e){:target="_blank"}  
 
 ---
+## Telegram channel
+### Network Related
+1.[https://t.me/s/TheBlackParade_tmpIAvLNWqRY7](https://t.me/s/TheBlackParade_tmpIAvLNWqRY7){:target="_blank"}  
+2.[https://t.me/s/iBugThought](https://t.me/s/iBugThought){:target="_blank"}  
+
+---
 
 1.[计算机体系结构基础](https://foxsen.github.io/archbase/){:target="_blank"}  
 2.[操作系统-设计与实现](https://ipads.se.sjtu.edu.cn/ospi/){:target="_blank"}   
