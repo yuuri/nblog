@@ -28,6 +28,8 @@
 15.[Kenneth Lee的工作和生活总结](https://mysummary.readthedocs.io/zh/latest/){:target="_blank"}   
 16.[Yanyan's-Wiki](https://jyywiki.cn/){:target="_blank"}  
 17.[LA-UOSC社区](https://bbs.loongarch.org/){:target="_blank"}  
+18.[Linux-201](https://201.ustclug.org/){:target="_blank"}  
+
 ---
 
 1.[AI芯片设计从入门到放弃](https://zhuanlan.zhihu.com/p/20076957712){:target="_blank"}  
